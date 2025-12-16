@@ -10,6 +10,13 @@ class CartViewModel(
     private val repository: CartRepository
 ) : ViewModel() {
 
+    init {
+        // Ejecutamos la carga del carrito tan pronto como el ViewModel se crea
+        viewModelScope.launch {
+            repository.loadCart() // 👈 ¡Uso Encontrado/Añadido!
+        }
+        }
+
     val uiState = repository.uiState
 
     fun incrementQuantity(productId: String) {

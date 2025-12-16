@@ -66,7 +66,6 @@ fun NavGraph(
         composable(Routes.Verification.route) { VerificationScreen(navController, authViewModel) }
         composable(Routes.Location.route) { LocationScreen() }
         composable(Routes.SignIn.route) { SignInScreen(navController, authViewModel) }
-        composable(Routes.SignInMethod.route) { SignInMethodScreen(navController) }
 
         composable(
             route = "main_screen?start_destination={start_destination}",

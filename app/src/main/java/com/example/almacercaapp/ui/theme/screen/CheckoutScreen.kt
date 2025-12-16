@@ -34,14 +34,15 @@ fun CheckoutScreen(
 
     // --- Diálogo de Confirmación (Paso 6 del usuario) ---
     if (uiState.showConfirmDialog) { // Muestra el diálogo, boleano
-        AlertDialog( // Muestra un diálogo alerta, que es una pantalla pequeña temporal
+        AlertDialog( //Muestra un cuadro de dialogo
+            //ondismiss es que sucede al cerrar el cuadro de dialogo
             onDismissRequest = { checkoutViewModel.onDialogDismiss() },
             title = { Text("Pago procesado") },
             text = { Text("Tu pago ha sido procesado exitosamente. Prepararemos tu pedido.") },
             confirmButton = {
                 Button(
-                    onClick = {
-                        checkoutViewModel.onDialogDismiss()
+                    onClick = { //al presionar
+                        checkoutViewModel.onDialogDismiss()//se oculta la ventana y
                         onNavigateToProcessing() // Navega a la pantalla de carga
                     }
                 ) {
@@ -51,7 +52,7 @@ fun CheckoutScreen(
         )
     }
 
-    Scaffold(
+    Scaffold(// esqueleto
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text("Pantalla de pago") },
@@ -67,7 +68,7 @@ fun CheckoutScreen(
         },
         bottomBar = {
             Button(
-                onClick = { checkoutViewModel.onConfirmPurchase() }, // Muestra el diálogo
+                onClick = { checkoutViewModel.onConfirmPurchase() }, // Muestra el diálogo ACA SE OCUPA EL BUY
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
@@ -76,6 +77,7 @@ fun CheckoutScreen(
                 Text("Realizar la compra", fontSize = 18.sp)
             }
         }
+        //cuando se presiona el evento este se dirige al model para que inicie el proceco de compra
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -87,7 +89,7 @@ fun CheckoutScreen(
 
             // --- 1. Sección de Retiro (Obligatoria) ---
             SectionHeader(title = "RETIRO")
-            ClickableInfoRow(
+            ClickableInfoRow( //muestra la info de retiro
                 label = "Retiro en Tienda",
                 value = "Gratis",
                 detail = "Estándar | 10 minutos"
@@ -97,7 +99,7 @@ fun CheckoutScreen(
             SectionHeader(title = "PAGO")
             OutlinedTextField(
                 value = uiState.paymentDetails,
-                onValueChange = { checkoutViewModel.onPaymentDetailsChanged(it) },
+                onValueChange = { checkoutViewModel.onPaymentDetailsChanged(it) }, //setea el valor, lo saca del view
                 label = { Text("Método de pago") },
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = { Text("Ej: Visa *1234") }
@@ -110,13 +112,15 @@ fun CheckoutScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                OutlinedTextField(
+                OutlinedTextField(//permite ingresar texto
                     value = uiState.promoCode,
+                    //onvaluechange es una función que se llama cuando el valor cambia en el campo de texto.
                     onValueChange = { checkoutViewModel.onPromoCodeChanged(it) },
                     label = { Text("Código promocional") },
                     modifier = Modifier.weight(1f),
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
-                    isError = uiState.promoError != null
+                    isError = uiState.promoError != null //si hay algo para mostrar se muestra
+                    //visual
                 )
                 Button(
                     onClick = { checkoutViewModel.verifyPromoCode() },
@@ -125,7 +129,8 @@ fun CheckoutScreen(
                     Text("Verificar")
                 }
             }
-            if (uiState.promoError != null) {
+            //solo el texto de abajo
+            if (uiState.promoError != null) { //si hay algo para mostrar se muestra
                 Text(
                     text = uiState.promoError!!,
                     color = MaterialTheme.colorScheme.error,
@@ -149,7 +154,7 @@ fun CheckoutScreen(
 
             // --- 4. Artículos (del Carrito) ---
             SectionHeader(title = "ARTÍCULOS")
-            cartUiState.items.forEach { cartItem ->
+            cartUiState.items.forEach { cartItem -> //muestra cada producto del carrito
                 SimpleCheckoutItem(
                     title = cartItem.product.name,
                     description = "Cantidad: ${cartItem.quantity}",
@@ -160,8 +165,10 @@ fun CheckoutScreen(
 
             // --- 5. Resumen de Total ---
             Spacer(modifier = Modifier.height(24.dp))
-            SummaryRow(label = "Subtotal (${cartUiState.totalItems})", value = cartUiState.formattedSubtotal)
-            SummaryRow(label = "Impuestos", value = cartUiState.formattedImpuestos)
+            SummaryRow(label = "Subtotal (${cartUiState.totalItems})",
+                       value = cartUiState.formattedSubtotal)
+            SummaryRow(label = "Impuestos",
+                       value = cartUiState.formattedImpuestos)
             SummaryRow(
                 label = "Total",
                 value = cartUiState.formattedTotal,

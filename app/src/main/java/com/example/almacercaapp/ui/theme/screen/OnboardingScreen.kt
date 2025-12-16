@@ -70,7 +70,7 @@ fun OnboardingScreen(navController: NavController) {
 
             Button(
                 onClick = {
-                    navController.navigate(Routes.SignInMethod.route)
+                    navController.navigate(Routes.SignIn.route)
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6FCF97)),
                 shape = RoundedCornerShape(16.dp),
@@ -96,7 +96,7 @@ fun OnboardingScreen(navController: NavController) {
                 fontWeight = FontWeight.Medium,
                 modifier = Modifier.clickable {
 
-                    navController.navigate(Routes.RoleSelection.route)
+                    navController.navigate(Routes.SignUp.route)
                 }
             )
         }

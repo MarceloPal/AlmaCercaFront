@@ -38,7 +38,7 @@ fun ProfileScreen(
                     onClick = {
                         showLogoutDialog = false
                         // Usamos parentNavController para salir al flujo de login
-                        parentNavController.navigate(Routes.SignInMethod.route) {
+                        parentNavController.navigate(Routes.SignIn.route) {
                             popUpTo(parentNavController.graph.id) { inclusive = true }
                         }
                     },

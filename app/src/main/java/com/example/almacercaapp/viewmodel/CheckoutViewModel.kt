@@ -15,24 +15,27 @@ data class CheckoutUiState(
     val promoError: String? = null,
     val showConfirmDialog: Boolean = false, //
     val promoSuccess: String? = null
-)
+) //clase de estados, contiene lo necesario para dibujar la pagina
 
 class CheckoutViewModel(
-    private val cartRepository: CartRepository //injectamos el repositorio
+    private val cartRepository: CartRepository //injectamos el repositorio, para que funcione
 ) : ViewModel() {
 
     // 1. Conecta con el Repositorio para obtener los productos y totales
     val cartUiState = cartRepository.uiState
 
     // 2. Estado mutable para los campos de la UI
-    private val _uiState = MutableStateFlow(CheckoutUiState())
-    val uiState = _uiState.asStateFlow() // Expose immutable state
+    //_uistare guarda el estado de la pantalla y contiene todo el checkoutuistate
+    private val _uiState = MutableStateFlow(CheckoutUiState()) //guarda el estado, solo el viewmodel puede modificarla
+    val uiState = _uiState.asStateFlow() // Expose immutable state, solo la vista puede leer
+    //guarda el texto q el user escribio en la caja
 
 
     fun onPaymentDetailsChanged(text: String) {
-        _uiState.update { it.copy(paymentDetails = text) }
+        _uiState.update { it.copy(paymentDetails = text) } // Actualiza el estado con el nuevo texto
     }
 
+    //guarda el texto q el user escribio en la caja
     fun onPromoCodeChanged(text: String) {
         _uiState.update {
             it.copy(
@@ -44,32 +47,35 @@ class CheckoutViewModel(
     }
 
     fun verifyPromoCode() {
+        //de _uiState obtenemos el value (el estado actual) y de ese estado obtenemos b el valor de promoCode
         val code = _uiState.value.promoCode
 
         // Llamamos al repositorio y guardamos el resultado (true o false)
         val success = cartRepository.applyCoupon(code)
 
         if (success) {
+            //se actualiza el estado
             // Si funcionó: Limpiamos cualquier error visual
             _uiState.update { it.copy(promoError = null,
-                promoSuccess = "Cupón aplicado con éxito") }
+                                      promoSuccess = "Cupón aplicado con éxito") }
         } else {
             // Si falló: Mostramos el error rojo debajo del campo de texto
-            _uiState.update { it.copy(promoError = "Cupón inválido", promoSuccess = null) }
+            _uiState.update { it.copy(promoError = "Cupón inválido",
+                                      promoSuccess = null) }
         }
     }
 
 
-    fun onConfirmPurchase() {
-        viewModelScope.launch {
+    fun onConfirmPurchase() { //realizar compra
+        viewModelScope.launch { //corrutina para no congelar al buscar buy
             // Llamamos a la función nueva del repositorio
-            // No necesitamos pasar userId ni apiService, el repo ya los tiene.
+            // para ejecutar el endpoint
             val result = cartRepository.buyCart()
 
             if (result.isSuccess) {
-                _uiState.update { it.copy(showConfirmDialog = true,
+                _uiState.update { it.copy(showConfirmDialog = true, //se muestra el dialogo
                                           promoCode = "",
-                                           promoSuccess = null) }
+                                          promoSuccess = null) }
             } else {
                 // Manejar error (mostrar un Toast o mensaje)
 
@@ -78,6 +84,6 @@ class CheckoutViewModel(
     }
 
     fun onDialogDismiss() {
-        _uiState.update { it.copy(showConfirmDialog = false) }
+        _uiState.update { it.copy(showConfirmDialog = false) } //se cierre
     }
 }

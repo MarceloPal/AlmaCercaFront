@@ -11,7 +11,6 @@ sealed class Routes(val route: String) {
     object Verification : Routes("verification")
     object Location : Routes("location")
     object SignIn : Routes("signin")
-    object SignInMethod : Routes("signin_method")
     object PersonalData : Routes("personal_data")
     object Notifications : Routes("notifications")
     object Faq : Routes("faq")

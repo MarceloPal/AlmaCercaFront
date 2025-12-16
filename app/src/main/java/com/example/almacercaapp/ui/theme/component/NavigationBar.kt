@@ -1,48 +1,45 @@
 package com.example.almacercaapp.ui.theme.component
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkHorizontally
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.almacercaapp.R
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Storefront
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.ui.graphics.graphicsLayer
 
-// --- Datos de los items de navegación ---
+// --- Datos de los items de navegación (Usando Material Icons) ---
 private data class NavItem(
     val label: String,
     val route: String,
-    val iconRes: Int
+    val imageVector: androidx.compose.ui.graphics.vector.ImageVector // Cambiamos a ImageVector
 )
 
 private val navItems = listOf(
-    NavItem("Tiendas", "home", R.drawable.ic_tiendas_inicio),
-    NavItem("Explorar", "explore", R.drawable.ic_explorar),
-    NavItem("Carrito", "cart", R.drawable.ic_carrito),
-    NavItem("Favoritos", "favorites", R.drawable.ic_favoritos),
-    NavItem("Cuenta", "profile", R.drawable.ic_cuenta)
+    NavItem("Tiendas", "home", Icons.Filled.Storefront), // Tiendas
+    NavItem("Explorar", "explore", Icons.Filled.Search),     // Explorar (Cambio a Search/Explorar)
+    NavItem("Carrito", "cart", Icons.Filled.ShoppingCart), // Carrito
+    NavItem("Favoritos", "favorites", Icons.Filled.Favorite), // Favoritos
+    NavItem("Cuenta", "profile", Icons.Filled.AccountCircle) // Cuenta/Perfil
 )
 // --- Fin de datos ---
 
@@ -53,20 +50,22 @@ fun NavigationBar(
     onItemSelected: (String) -> Unit
 ) {
     val darkGreenColor = Color(0xFF2E7D32)
-    val unselectedColor = Color.White.copy(alpha = 0.7f)
+    // Usaremos un color más suave para los no seleccionados para mejor contraste
+    val unselectedColor = Color.White.copy(alpha = 0.8f)
 
     // Contenedor principal de la barra de navegación
     NavigationBar(
+        // Reducimos el radio de las esquinas para que no se vea tan pesado
         modifier = Modifier
-            .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)),
+            .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
         containerColor = darkGreenColor,
-        tonalElevation = 8.dp // Mantenemos la elevación
+        tonalElevation = 8.dp
     ) {
         // Fila para distribuir los items
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(80.dp), // Altura estándar de NavigationBar
+                .height(72.dp), // Altura ligeramente reducida para compacidad
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -76,8 +75,8 @@ fun NavigationBar(
                 CustomNavItem(
                     item = item,
                     isSelected = isSelected,
-                    selectedColor = darkGreenColor, // Verde para el texto/icono seleccionado
-                    unselectedColor = unselectedColor, // Blanco para el no seleccionado
+                    selectedColor = darkGreenColor,
+                    unselectedColor = unselectedColor,
                     onClick = { onItemSelected(item.route) }
                 )
             }
@@ -86,7 +85,7 @@ fun NavigationBar(
 }
 
 /**
- * Composable de item personalizado que se anima horizontalmente.
+ * Composable de item personalizado con animación de pill y escala.
  */
 @Composable
 private fun CustomNavItem(
@@ -96,56 +95,64 @@ private fun CustomNavItem(
     unselectedColor: Color,
     onClick: () -> Unit
 ) {
-    // Animamos el color del fondo (pill)
+    // Animación de color de fondo (pill)
     val backgroundColor by animateColorAsState(
         targetValue = if (isSelected) Color.White else Color.Transparent,
+        animationSpec = tween(durationMillis = 300), // Animación más notoria
         label = "bgColor"
     )
 
-    // Animamos el color del contenido (icono y texto)
+    // Animación de color del contenido (icono y texto)
     val contentColor by animateColorAsState(
         targetValue = if (isSelected) selectedColor else unselectedColor,
+        animationSpec = tween(durationMillis = 300),
         label = "contentColor"
+    )
+
+    // Animación de escala (sólo para el icono)
+    val scale by animateFloatAsState(
+        targetValue = if (isSelected) 1.15f else 1.0f, // Icono se agranda
+        animationSpec = tween(durationMillis = 300),
+        label = "iconScale"
     )
 
     // Usamos Surface para el fondo "pill" y el click
     Surface(
         onClick = onClick,
-        shape = RoundedCornerShape(50), // Forma de pill
+        shape = RoundedCornerShape(50),
         color = backgroundColor,
         contentColor = contentColor,
         modifier = Modifier
-            .height(48.dp) // Altura fija para el pill
+            .height(44.dp) // Altura reducida para ser más estilizado
     ) {
         // Row para el contenido (Icono + Texto)
         Row(
             modifier = Modifier
-                .padding(horizontal = 16.dp), // Padding horizontal dentro del pill
+                .padding(horizontal = 12.dp), // Padding horizontal ajustado
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            // Icono
+            // Icono con animación de escala
             Icon(
-                painter = painterResource(id = item.iconRes),
+                imageVector = item.imageVector, // Usamos ImageVector
                 contentDescription = item.label,
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier
+                    .size(24.dp)
+                    .graphicsLayer { scaleX = scale; scaleY = scale } // Aplicamos la animación de escala
             )
 
             // Texto animado
             AnimatedVisibility(
                 visible = isSelected,
-                // Animación de entrada: aparece y se expande horizontalmente
-                enter = fadeIn(initialAlpha = 0.3f) + expandHorizontally(),
-                // Animación de salida: se contrae y desaparece
-                exit = fadeOut() + shrinkHorizontally()
+                // Usamos un tween más rápido para la animación del texto
+                enter = fadeIn(animationSpec = tween(200)) + expandHorizontally(animationSpec = tween(200)),
+                exit = fadeOut(animationSpec = tween(200)) + shrinkHorizontally(animationSpec = tween(200))
             ) {
-                // Ponemos el Spacer y el Text dentro de un Row
-                // para que AnimatedVisibility los trate como un solo bloque
                 Row {
-                    Spacer(Modifier.width(8.dp)) // Espacio entre icono y texto
+                    Spacer(Modifier.width(6.dp)) // Espacio ligeramente reducido entre icono y texto
                     Text(
                         text = item.label,
-                        fontWeight = FontWeight.Medium,
+                        fontWeight = FontWeight.SemiBold, // Un poco más de peso a la fuente
                         maxLines = 1
                     )
                 }

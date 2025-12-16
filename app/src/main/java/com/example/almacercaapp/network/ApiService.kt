@@ -25,13 +25,14 @@ interface ApiService {
     // Carrito (requiere header userId)
     @GET("api/cart")
     suspend fun getMyCart(@Header("userId") userId: String): Response<List<CartItemDto>>
+    //al ser suspend esto indica que entra en suspensión y se puede pausar
 
     @POST("api/cart/buy")
     suspend fun buyCart(@Header("userId") userId: String): Response<Void> // <--- Void con V mayúscula
 
     @POST("api/cart/add")
     suspend fun addProductToMyCart(
-        @Header("userId") userId: String,
+        @Header("userId") userId: String, //indica que el user id es un header
         @Body body: AddToCartRequest
     ): Response<CartItem>
 

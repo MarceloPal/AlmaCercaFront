@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.update
 import java.text.NumberFormat
 import java.util.Locale
 
+//estado del repo, solo guarda datos
 data class CartUiState(
     val items: List<CartItem> = emptyList(),
     val productAddedMessage: String? = null,
@@ -49,14 +50,14 @@ class CartRepository(
     private val apiService: ApiService,
     private val dataStore: DataStore<Preferences>
 ) {
-    private val _uiState = MutableStateFlow(CartUiState())
-    val uiState = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(CartUiState()) //guarda
+    val uiState = _uiState.asStateFlow() //lectura
 
     private suspend fun getUserId(): String? {
         return dataStore.data.map { prefs ->
             prefs[PreferencesKeys.USER_ID] // ✅ Usa la misma instancia
         }.first()
-    }
+    } //obtiene la identidad del usuer logeado, para op sensibles q requieran header
 
     // Cargar carrito desde el backend
     suspend fun loadCart() {

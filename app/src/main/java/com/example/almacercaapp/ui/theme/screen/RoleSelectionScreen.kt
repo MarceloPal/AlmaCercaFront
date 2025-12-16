@@ -38,7 +38,7 @@ fun RoleSelectionScreen(navController: NavController) {
 
         Spacer(modifier = Modifier.height(32.dp)) // Espacio
 
-
+        // --- Botón 1: Comprador (BUYER) ---
         Button(
             onClick = {
                 // Navega a SignUp pasando "BUYER" como argumento
@@ -53,6 +53,24 @@ fun RoleSelectionScreen(navController: NavController) {
             Text("Quiero Comprar", color = Color.White, fontSize = 18.sp)
         }
 
+        Spacer(modifier = Modifier.height(16.dp)) // Espacio entre botones
+
+        // --- Botón 2: Vendedor (ADMIN) ---
+        Button(
+            onClick = {
+                // Navega a SignUp pasando "ADMIN" como argumento
+                // En tu Backend, el rol que maneja productos es ADMIN
+                navController.navigate(Routes.SignUp.createRoute(UserRole.ADMIN))
+            },
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary), // Puedes usar otro color (ej. secondary)
+            modifier = Modifier
+                .fillMaxWidth() // Ancho completo
+                .height(55.dp), // Altura fija
+            shape = MaterialTheme.shapes.medium // Forma del botón
+        ) {
+            Text("Quiero Vender", color = Color.White, fontSize = 18.sp)
+        }
+
         Spacer(modifier = Modifier.height(40.dp)) // Espacio antes del texto de login
 
         // --- Texto para Iniciar Sesión ---
@@ -63,8 +81,8 @@ fun RoleSelectionScreen(navController: NavController) {
                 color = MaterialTheme.colorScheme.primary, // Color primario del tema
                 fontWeight = FontWeight.Medium,
                 modifier = Modifier.clickable { // Hace el texto clickeable
-                    // Navega a la pantalla de métodos de inicio de sesión
-                    navController.navigate(Routes.SignInMethod.route)
+                    // Navega a la pantalla de inicio de sesión (SignInScreen)
+                    navController.navigate(Routes.SignIn.route)
                 }
             )
         }
