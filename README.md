@@ -13,12 +13,13 @@ El sistema separa completamente los flujos de trabajo según el rol del usuario:
 ### 👤 Rol: Comprador
 * **Interfaz de Compra:** Navegación fluida con barra inferior.
 * **Carrito de Compras:** Funcionalidad completa para agregar, eliminar y gestionar cantidades.
-* **Persistencia:** El carrito se guarda en la base de datos y se recupera al iniciar sesión.
+* **Persistencia:** El carrito se guarda en la base de datos al realizar la compra.
 
 ### 🏪 Rol: Vendedor
 * **Gestión de Inventario (CRUD):** Agregar, editar y eliminar productos.
 * **Panel de Control:** Menú lateral con acceso a soporte y gestión.
 * **Carga de Imágenes:** Gestión visual de los productos.
+* **Persistencia:** Los productos se guardan en la base de datos.
 
 ## 🛠️ Stack Tecnológico y Arquitectura
 
@@ -36,7 +37,7 @@ El proyecto utiliza una arquitectura **MVVM (Model-View-ViewModel)** para separa
 
 1.  **Clonar el repositorio:**
     ```bash
-    git clone [https://github.com/YjaelBelenLisboaMardones/AlmaCercaAplicacionMovil.git](https://github.com/YjaelBelenLisboaMardones/AlmaCercaAplicacionMovil.git)
+    git clone [https://github.com/MarceloPal/AlmaCercaFront.git](https://github.com/MarceloPal/AlmaCercaFront.git)
     ```
 2.  **Abrir en Android Studio:**
     * Usa una versión reciente (Ladybug o superior recomendado).
@@ -68,6 +69,7 @@ La aplicación móvil consume los siguientes servicios desplegados en la nube:
 | `POST` | `/api/admin/products` | ADMIN | Crear nuevo producto |
 | `PUT` | `/api/admin/products/{idProducto}` | ADMIN | Editar producto |
 | `DELETE` | `/api/admin/products/{idProducto}` | ADMIN | Eliminar producto |
+|  POST	|  /api/cart/buy 
 
 
 
