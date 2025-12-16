@@ -19,7 +19,7 @@ El sistema separa completamente los flujos de trabajo según el rol del usuario:
 * **Gestión de Inventario (CRUD):** Agregar, editar y eliminar productos.
 * **Panel de Control:** Menú lateral con acceso a soporte y gestión.
 * **Carga de Imágenes:** Gestión visual de los productos.
-* * **Persistencia:** Los productos se guardan en la base de datos.
+* **Persistencia:** Los productos se guardan en la base de datos.
 
 ## 🛠️ Stack Tecnológico y Arquitectura
 
@@ -69,6 +69,7 @@ La aplicación móvil consume los siguientes servicios desplegados en la nube:
 | `POST` | `/api/admin/products` | ADMIN | Crear nuevo producto |
 | `PUT` | `/api/admin/products/{idProducto}` | ADMIN | Editar producto |
 | `DELETE` | `/api/admin/products/{idProducto}` | ADMIN | Eliminar producto |
+|  POST	|  /api/cart/buy 
 
 
 
